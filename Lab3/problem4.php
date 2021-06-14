@@ -1,7 +1,7 @@
 <?php
-$name = "null";
+$name = "mutasim";
 
-if($name == "raju" && $name == "mina" && $name = "mithu")
+if($name == "raju" || $name == "mina" || $name == "mithu")
     {
         echo "Hello";
     }
