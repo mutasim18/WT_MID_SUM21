@@ -20,19 +20,20 @@
 	$bio="";
 	$err_bio="";
 	
+	
 	$hasError=false;
 	
 	
-	if($_SERVER["REQUEST_METHOD"] == "POST"){
-		
+	if($_SERVER["REQUEST_METHOD"] == "POST")
+	{
         //name//
 		if(empty($_POST["name"])){
 			$hasError=true;
-			$err_name="Name Required";
+			$err_name="-Name Required-";
 		}
 		elseif (strlen($_POST["name"]) <=3){
 			$hasError = true;
-			$err_name = "Name must be greater than 3 characters";
+			$err_name = "-Name must be greater than 3 characters-";
 		}
 		else
 		{
@@ -42,12 +43,17 @@
         //User name//
         if(empty($_POST["uname"])){
 			$hasError=true;
-			$err_uname="User Name Required";
+			$err_uname="-User Name Required-";
 		}
-		elseif (strlen($_POST["uname"]) <=6){
+		elseif (strlen($_POST["uname"]) <=6)
+		{
 			$hasError = true;
-			$err_uname = "User Name must be greater than 6 characters";
+			$err_uname = "-User Name must be greater than 6 characters-";
 		}
+		else if(strpos($_POST["uname"]," "))
+		{
+			$err_uname = "-no space is allowed-";
+		}	
 		else
 		{
 			$uname = $_POST["uname"];
@@ -56,17 +62,56 @@
         //Password//
         if(empty($_POST["pass"])){
 			$hasError=true;
-			$err_pass="Password Required";
+			$err_pass="-Password Required-";
 		}
+		elseif (strlen($_POST["pass"]) <=8)
+		{
+			$hasError = true;
+			$err_pass = "-Password must be greater than 8 characters-";
+		}
+		else if(strpos($_POST["pass"],"#"||"?"))
+		{
+			$err_pass = "-Dont use those special characters in your password-";
+		}	
 		else
 		{
 			$pass = $_POST["pass"];
 		}
 
-        //Email//
-        if(empty($_POST["email"])){
+		//Confirm Password//
+		if(empty($_POST["confirm_pass"]))
+		{
 			$hasError=true;
-			$err_email="Email is Required";
+			$err_confirm_pass="-Password Required-";
+		}
+
+		elseif($pass != $confirm_pass)
+		{
+			$hasError=true;	
+   			$err_confirm_pass ="-Password and Confirm password should not be different-";  
+		}
+		if($pass ==  $confirm_pass)
+        {
+            if( ctype_upper($pass) && ctype_lower($pass) && is_numeric($pass) )
+            {
+               $pass = $_POST["pass"];
+            }
+
+            else
+            {
+                 $err_pass="-Password should contain atleast one uppercase,lower case and numeric-";
+            }
+        }
+
+        //Email//
+        if(empty($_POST["email"]))
+		{
+			$hasError=true;
+			$err_email="-Email is Required-";
+		}
+		else if(!strpos($_POST["email"],"@"))
+		{
+			$err_email = "*-Invalid Email-";
 		}
 		else
 		{
@@ -74,10 +119,12 @@
 		}
 
         //Phone//
-        if(empty($_POST["phone"])){
+        if(!empty($_POST["phone"]))
+		{
 			$hasError=true;
-			$err_phone="Phone number is Required";
+			$err_phone="-Phone number is Required-";
 		}
+		
 		else
 		{
 			$phone = $_POST["phone"];
@@ -86,7 +133,7 @@
         //Address//
         if(empty($_POST["address"])){
 			$hasError=true;
-			$err_address="Address is Required";
+			$err_address="-Address is Required-";
 		}
 		else
 		{
@@ -96,7 +143,7 @@
         //Gender//
 		if(!isset($_POST["gender"])){
 			$hasError = true;
-			$err_gender = "Gender Required";
+			$err_gender = "-Gender is Required-";
 		}
 		else{
 			$gender = $_POST["gender"];
@@ -105,7 +152,7 @@
 		
 		if(empty($_POST["bio"])){
 			$hasError = true;
-			$err_bio = "Bio Required";
+			$err_bio = "-Bio is Required-";
 		}
 		else{
 			$bio = $_POST["bio"];
@@ -114,21 +161,17 @@
 		if(!$hasError){
 			echo $_POST["name"]."<br>";
 			echo $_POST["username"]."<br>";
-			echo $_POST["password"]."<br>";
-            echo $_POST["confirm_password"]."<br>";
+			echo $_POST["pass"]."<br>";
+            echo $_POST["confirm_pass"]."<br>";
             echo $_POST["email"]."<br>";
             echo $_POST["phone"]."<br>";
             echo $_POST["address"]."<br>";
             echo $_POST["birthdate"]."<br>";
 			echo $_POST["gender"]."<br>";
 			echo $_POST["bio"]."<br>";
-			foreach($arr as $e){
-				echo "$e<br>";
+
 			}
 		}
-		
-	}
-	
 ?>
 <html>
 	<body>
@@ -139,38 +182,38 @@
 				<tr>
 					<td align="right">Name</td>
 					<td>:<input name="name" value="<?php echo $name;?>" type="text"><br>
-					<span><?php echo $err_name;?></span></td>
+					<span style="color:red;"><?php echo $err_name;?></span></td>
 				</tr>
 
 				<tr>
 					<td align="right">Username</td>
 					<td>:<input name="uname" value="<?php echo $uname;?>" type="text"><br>
-					<span><?php echo $err_uname;?></span></td>
+					<span style="color:red;"><?php echo $err_uname;?></span></td>
 				</tr>
 
 				<tr>
 					<td align="right">Password</td>
-					<td>:<input name="password" value="<?php echo $pass;?>" type="password"><br>
-					<span><?php echo $err_pass;?></span></td>
+					<td>:<input name="pass" value="<?php echo $pass;?>" type="password"><br>
+					<span style="color:red;"><?php echo $err_pass;?></span></td>
 				</tr>
 
                 <tr>
 					<td align="right">Confirm Password</td>
-					<td>:<input name="confirm_password" value="<?php echo $confirm_pass;?>" type="password"><br>
-					<span><?php echo $err_confirm_pass;?></span></td>
+					<td>:<input name="confirm_pass" value="<?php echo $confirm_pass;?>" type="password"><br>
+					<span style="color:red;"><?php echo $err_confirm_pass;?></span></td>
 				</tr>
 
                 <tr>
 					<td align="right">Email</td>
 					<td>:<input name="email" value="<?php echo $email;?>" type="text"><br>
-					<span><?php echo $err_email;?></span></td>
+					<span style="color:red;"><?php echo $err_email;?></span></td>
 				</tr>
 
                 <tr>
 					<td align="right">Phone</td>
-					<td>:<input name="phone" value="<?php echo $phone;?>" type="text" placeholder="Code">
-                    <input name="phone" value="<?php echo $phone;?>" type="text" placeholder="Number"><br>
-					<span><?php echo $err_phone;?></span></td>
+					<td>:<input name="phone" value="<?php echo $phone;?>" type="number" placeholder="Code">
+                    <input name="phone" value="<?php echo $phone;?>" type="number" placeholder="Number"><br>
+					<span style="color:red;"><?php echo $err_phone;?></span></td>
 				</tr>
 
                 <tr>
@@ -179,58 +222,73 @@
                     <input name="address" value="<?php echo $address;?>" type="text" placeholder="City">
                     <input name="address" value="<?php echo $address;?>" type="text" placeholder="State"><br>
                     <input name="address" value="<?php echo $address;?>" type="text" placeholder="Postal/Zip Code"><br>
-					<span><?php echo $err_address;?></span></td>
+					<span style="color:red;"><?php echo $err_address;?></span></td>
 				</tr>
 
                 <tr>
 					<td align="right">Birth Date</td>
 					<td>
                     <select id="birthdate" name="day" >
-                    <option value="day">1</option>
-                    <option value="day">2</option>
-                    <option value="day">3</option>
-                    <option value="day">4</option>
-                    <option value="day">5</option>
-                    <option value="day">6</option>
-                    <option value="day">7</option>
+					<?php			
+						for ($i = 0; $i < 32; $i++) 
+						{
+							if($i == 0)
+								{
+
+									echo "<option value='day' disabled selected>Day</option>";
+								}
+									else
+									{
+										echo "<option value='$i'>$i</option>";
+									}
+						}
+					?>			
                     </select>
                     <select id="birthdate" name="month" >
-                    <option value="month">January</option>
-                    <option value="month">February</option>
-                    <option value="month">March</option>
-                    <option value="month">April</option>
-                    <option value="month">May</option>
-                    <option value="month">June</option>
-                    <option value="month">July</option>
-                    <option value="month">August</option>
-                    <option value="month">September</option>
-                    <option value="month">October</option>
-                    <option value="month">November</option>
-                    <option value="month">December</option>
+					<?php			
+						for ($i = 0; $i < 13; $i++) 
+						{
+							if($i == 0)
+								{
+
+									echo "<option value='month' disabled selected>Month</option>";
+								}
+									else
+									{
+										echo "<option value='$i'>$i</option>";
+									}
+						}
+					?>			
                     </select>
-                    <select id="birthdate" name="year" >
-                    <option value="year">2011</option>
-                    <option value="year">2012</option>
-                    <option value="year">2013</option>
-                    <option value="year">2014</option>
-                    <option value="year">2015</option>
-                    <option value="year">2016</option>
-                    <option value="year">2017</option>
+                    <select  id="birthdate" name="year" >
+                    <?php			
+						for ($i = 1900; $i < 2022; $i++) 
+						{
+							if($i == 1900)
+								{
+
+									echo "<option value='year' disabled selected>Year</option>";
+								}
+									else
+									{
+										echo "<option value='$i'>$i</option>";
+									}
+						}
+					?>			
                     </select>
                     </td>
-					<td><span></span></td>
+					<td><span style="color:red;"><?php echo $err_birthdate?></span></td>
 				</tr>
 
                 <tr>
 					<td align="right">Gender</td>
 					<td>:<input type="radio" value="Male" <?php if($gender == "Male") echo "checked";?> name="gender"> Male <input type="radio" <?php if($gender == "Female") echo "checked";?> value="Female" name="gender"> Female <br>
-					<span><?php echo $err_gender;?></span></td>
+					<span style="color:red;"><?php echo $err_gender;?></span></td>
 				</tr>
 
 				<tr>
-					<td align="right">
-                    <input type="checkbox" id="" name="">A Friend or Colleague
-                    </td>
+					<td align="right"></td>
+                    <td><input type="checkbox" id="" name="">A Friend or Colleague</td>
 				</tr>
 
                 <tr>
@@ -249,7 +307,7 @@
                 <tr>
 					<td align="right">Bio</td>
 					<td><textarea name="bio"><?php echo $bio;?></textarea>
-						<br><span><?php echo $err_bio;?></span>
+						<br><span style="color:red;"><?php echo $err_bio;?></span>
 					</td>
 				</tr>
 				<tr>
