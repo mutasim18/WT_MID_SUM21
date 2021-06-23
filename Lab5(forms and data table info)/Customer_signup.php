@@ -83,7 +83,7 @@
             ?>			
             </select>
             </td>
-            <td></span></td>
+            <td><span></span></td>
         </tr>
         <tr align="center">
             <td>Driving License</td>
@@ -91,7 +91,7 @@
             <td><span></span></td><br>
         </tr>        
         <tr align="center">
-            <td><input type="submit" value="Login"></td>
+            <td><input type="submit" value="Signup"></td>
             <td><span></span></td><br>
         </tr>
         </table>
